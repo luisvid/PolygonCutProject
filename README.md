@@ -1,6 +1,6 @@
 # PolygonCutProject
 
-PolygonCutProject demonstrates an algorithm that splits an arbitrary polygon by a line in the plane. The solution is based on the approach described in the article “[Splitting an Arbitrary Polygon by a Line](https://geidav.wordpress.com/2015/03/21/splitting-an-arbitrary-polygon-by-a-line/)”. 
+PolygonCutProject demonstrates an algorithm that splits an arbitrary polygon by a line in the plane. The solution is based on the approach described in the article “[Splitting an Arbitrary Polygon by a Line](https://geidav.wordpress.com/2015/03/21/splitting-an-arbitrary-polygon-by-a-line/)”.
 
 ## Overview
 
@@ -46,6 +46,7 @@ PolygonCutProject/
 │   ├── Point.java     // Represents a point in 2D space.
 │   ├── Line.java      // Represents a line defined by two distinct points.
 │   └── Polygon.java   // Implements the polygon cutting logic.
+├── images/            // Contains graphic representations of examples used in Main.
 └── README.md          // Project documentation and build instructions.
 ```
 
