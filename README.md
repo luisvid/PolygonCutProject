@@ -1,6 +1,6 @@
 # PolygonCutProject
 
-PolygonCutProject demonstrates an algorithm that splits an arbitrary polygon by a line in the plane. The solution is based on the approach described in the article “[Splitting an Arbitrary Polygon by a Line](https://geidav.wordpress.com/2015/03/21/splitting-an-arbitrary-polygon-by-a-line/)”. The images used in the Main class examples are taken from that article.
+PolygonCutProject demonstrates an algorithm that splits an arbitrary polygon by a line in the plane. The solution is based on the approach described in the article “[Splitting an Arbitrary Polygon by a Line](https://geidav.wordpress.com/2015/03/21/splitting-an-arbitrary-polygon-by-a-line/)”. 
 
 ## Overview
 
