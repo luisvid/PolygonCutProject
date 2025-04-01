@@ -26,45 +26,53 @@ public class Polygon {
         List<Point> newVertices = new ArrayList<>();
         List<Integer> intersectionIndices = new ArrayList<>();
         int N = vertices.size();
+        double tolerance = 1e-9; // Used in sign() and computeIntersection()
 
-        // Process each edge of the polygon.
+        // Iterate over each edge of the polygon (the last vertex connects to the first)
         for (int i = 0; i < N; i++) {
             Point p_current = vertices.get(i);
             Point p_next = vertices.get((i + 1) % N);
 
-            // Add the current vertex to the new list.
+            // Add the current vertex.
             newVertices.add(p_current);
+            int currentIndex = newVertices.size() - 1;
 
-            // Determine the side of the line for both vertices.
             int s_current = sign(line, p_current);
             int s_next = sign(line, p_next);
 
-            // If both vertices are collinear with the line, skip processing this edge.
+            // If the current vertex lies on the line, mark it as an intersection point.
+            if (s_current == 0) {
+                if (!intersectionIndices.contains(currentIndex)) {
+                    intersectionIndices.add(currentIndex);
+                }
+            }
+
+            // If both endpoints are on the line, discard this edge.
             if (s_current == 0 && s_next == 0) {
                 continue;
             }
 
-            // If the vertices lie on opposite sides or one touches the line, compute the intersection.
-            if ((s_current * s_next < 0)
-                || (s_current == 0 && s_next != 0)
-                || (s_next == 0 && s_current != 0))
-            {
+            // If a real crossing occurs: endpoints lie on opposite sides.
+            if (s_current * s_next < 0) {
+                // Compute the intersection point and add it.
                 Point inter = computeIntersection(p_current, p_next, line);
                 if (inter != null) {
                     newVertices.add(inter);
                     intersectionIndices.add(newVertices.size() - 1);
                 }
             }
+            // Case where only one endpoint is on the line (edge "touches" the line)
+            // In this scenario, the collinear vertex has already been added, so no intersection is computed.
         }
 
-        // If no intersections are found, return the original polygon.
-        if (intersectionIndices.isEmpty()) {
+        // If no intersection points are found, return the original polygon.
+        if (intersectionIndices.size() == 0) {
             List<Polygon> res = new ArrayList<>();
             res.add(this);
             return res;
         }
 
-        // Partition newVertices into sub-polygons based on intersection points.
+        // Partition newVertices into sub-polygons using the intersection indices.
         List<Polygon> result = new ArrayList<>();
         int numIntersections = intersectionIndices.size();
         for (int j = 0; j < numIntersections; j++) {
@@ -72,8 +80,8 @@ public class Polygon {
             int indexEnd = intersectionIndices.get((j + 1) % numIntersections);
 
             List<Point> cycle = extractCycle(newVertices, indexStart, indexEnd);
-            // Ensure the sub-polygon has at least three vertices.
-            if (cycle.size() >= 3) {
+            // Discard degenerate cycles (fewer than 3 points or near-zero area).
+            if (cycle.size() >= 3 && Math.abs(computeArea(cycle)) > tolerance) {
                 result.add(new Polygon(cycle));
             }
         }
@@ -148,6 +156,23 @@ public class Polygon {
             }
         }
         return cycle;
+    }
+
+    /**
+     * Helper method to calculate the area of a polygon using the shoelace formula.
+     *
+     * @param pts the list of points representing the polygon.
+     * @return the computed area of the polygon.
+     */
+    private double computeArea(List<Point> pts) {
+        double area = 0;
+        int n = pts.size();
+        for (int i = 0; i < n; i++) {
+            Point p1 = pts.get(i);
+            Point p2 = pts.get((i + 1) % n);
+            area += p1.x * p2.y - p2.x * p1.y;
+        }
+        return area / 2.0;
     }
 
     /**
