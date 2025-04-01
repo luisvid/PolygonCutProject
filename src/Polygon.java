@@ -23,12 +23,15 @@ public class Polygon {
      * @return a list of polygons resulting from the cut operation.
      */
     public List<Polygon> cut(Line line) {
+        
+        // The new vertices will include the original vertices and any intersection points with the line.
         List<Point> newVertices = new ArrayList<>();
+        // The intersection indices will help in partitioning the new vertices into sub-polygons.
         List<Integer> intersectionIndices = new ArrayList<>();
         int N = vertices.size();
         double tolerance = 1e-9; // Used in sign() and computeIntersection()
 
-        // Iterate over each edge of the polygon (the last vertex connects to the first)
+        // Iterate over each vertex of the polygon (the last vertex connects to the first)
         for (int i = 0; i < N; i++) {
             Point p_current = vertices.get(i);
             Point p_next = vertices.get((i + 1) % N);
@@ -53,6 +56,7 @@ public class Polygon {
             }
 
             // If a real crossing occurs: endpoints lie on opposite sides.
+            // the collinear vertex has already been added, so no intersection is computed.
             if (s_current * s_next < 0) {
                 // Compute the intersection point and add it.
                 Point inter = computeIntersection(p_current, p_next, line);
@@ -61,8 +65,7 @@ public class Polygon {
                     intersectionIndices.add(newVertices.size() - 1);
                 }
             }
-            // Case where only one endpoint is on the line (edge "touches" the line)
-            // In this scenario, the collinear vertex has already been added, so no intersection is computed.
+
         }
 
         // If no intersection points are found, return the original polygon.
