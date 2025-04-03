@@ -23,7 +23,6 @@ public class Polygon {
      * @return a list of polygons resulting from the cut operation.
      */
     public List<Polygon> cut(Line line) {
-        
         // The new vertices will include the original vertices and any intersection points with the line.
         List<Point> newVertices = new ArrayList<>();
         // The intersection indices will help in partitioning the new vertices into sub-polygons.
@@ -56,7 +55,7 @@ public class Polygon {
             }
 
             // If a real crossing occurs: endpoints lie on opposite sides.
-            // the collinear vertex has already been added, so no intersection is computed.
+            // The collinear vertex has already been added, so no intersection is computed.
             if (s_current * s_next < 0) {
                 // Compute the intersection point and add it.
                 Point inter = computeIntersection(p_current, p_next, line);
@@ -65,7 +64,6 @@ public class Polygon {
                     intersectionIndices.add(newVertices.size() - 1);
                 }
             }
-
         }
 
         // If no intersection points are found, return the original polygon.
@@ -100,8 +98,8 @@ public class Polygon {
      * @return +1 if the point is on one side, -1 if on the opposite side, or 0 if collinear.
      */
     private int sign(Line line, Point p) {
-        double cross = (line.p2.x - line.p1.x) * (p.y - line.p1.y)
-                     - (line.p2.y - line.p1.y) * (p.x - line.p1.x);
+        double cross = (line.p2().x() - line.p1().x()) * (p.y() - line.p1().y())
+                     - (line.p2().y() - line.p1().y()) * (p.x() - line.p1().x());
         double tolerance = 1e-9;
         if (cross > tolerance) {
             return +1;
@@ -122,16 +120,16 @@ public class Polygon {
      */
     private Point computeIntersection(Point p1, Point p2, Line line) {
         double tolerance = 1e-9;
-        double denominator = (p2.x - p1.x) * (line.p2.y - line.p1.y)
-                           - (p2.y - p1.y) * (line.p2.x - line.p1.x);
+        double denominator = (p2.x() - p1.x()) * (line.p2().y() - line.p1().y())
+                           - (p2.y() - p1.y()) * (line.p2().x() - line.p1().x());
         if (Math.abs(denominator) < tolerance) {
             // The segment and line are parallel or collinear.
             return null;
         }
-        double t = ((line.p1.x - p1.x) * (line.p2.y - line.p1.y)
-                  - (line.p1.y - p1.y) * (line.p2.x - line.p1.x)) / denominator;
-        double x = p1.x + t * (p2.x - p1.x);
-        double y = p1.y + t * (p2.y - p1.y);
+        double t = ((line.p1().x() - p1.x()) * (line.p2().y() - line.p1().y())
+                  - (line.p1().y() - p1.y()) * (line.p2().x() - line.p1().x())) / denominator;
+        double x = p1.x() + t * (p2.x() - p1.x());
+        double y = p1.y() + t * (p2.y() - p1.y());
         return new Point(x, y);
     }
 
@@ -150,7 +148,8 @@ public class Polygon {
                 cycle.add(vertices.get(k));
             }
         } else {
-            // For the wrap-around case: traverse from indexStart to the end, and then from the beginning to indexEnd.
+            // For the wrap-around case: traverse from indexStart to the end,
+            // and then from the beginning to indexEnd.
             for (int k = indexStart; k < vertices.size(); k++) {
                 cycle.add(vertices.get(k));
             }
@@ -173,7 +172,7 @@ public class Polygon {
         for (int i = 0; i < n; i++) {
             Point p1 = pts.get(i);
             Point p2 = pts.get((i + 1) % n);
-            area += p1.x * p2.y - p2.x * p1.y;
+            area += p1.x() * p2.y() - p2.x() * p1.y();
         }
         return area / 2.0;
     }
