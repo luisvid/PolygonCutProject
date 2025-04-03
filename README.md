@@ -37,6 +37,10 @@ The implementation uses Java’s `List` interface (and its implementation `Array
 - **Standard Collection Interface:**  
   Using the `List` interface allows for flexibility in choosing different implementations if needed in the future.
 
+## Use of Records
+
+The project leverages Java's record feature to implement the basic geometric entities, like Point and Line. Records provide a concise syntax for creating immutable data carriers without the boilerplate code associated with traditional classes. This approach ensures that once created, Point and Line objects cannot be modified, increasing code reliability and clarity.
+
 ## Project Structure
 
 ```
